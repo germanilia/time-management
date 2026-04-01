@@ -1,0 +1,18 @@
+[Unit]
+Description=Sela Time Management Backend (uvicorn)
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/opt/sela-time-mgmt/backend
+Environment=APP_ENV=prod
+Environment=PATH=/home/ec2-user/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/ec2-user/.local/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
