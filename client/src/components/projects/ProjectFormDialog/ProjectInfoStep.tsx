@@ -17,8 +17,12 @@ const BILLING_TYPE_OPTIONS: { value: BillingType; label: string }[] = [
 interface ProjectInfoStepProps {
   name: string;
   onNameChange: (value: string) => void;
+  customer: string;
+  onCustomerChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  salesforceLink: string;
+  onSalesforceLinkChange: (value: string) => void;
   startDate: string;
   onStartDateChange: (value: string) => void;
   endDate: string;
@@ -40,8 +44,12 @@ interface ProjectInfoStepProps {
 export function ProjectInfoStep({
   name,
   onNameChange,
+  customer,
+  onCustomerChange,
   description,
   onDescriptionChange,
+  salesforceLink,
+  onSalesforceLinkChange,
   startDate,
   onStartDateChange,
   endDate,
@@ -79,6 +87,16 @@ export function ProjectInfoStep({
           onChange={(e) => onNameChange(e.target.value)}
           required
           data-testid="project-name-input"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="proj-customer">Customer</Label>
+        <Input
+          id="proj-customer"
+          value={customer}
+          onChange={(e) => onCustomerChange(e.target.value)}
+          required
+          data-testid="project-customer-input"
         />
       </div>
       <div className="space-y-2">
@@ -165,6 +183,17 @@ export function ProjectInfoStep({
             />
           </div>
         )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="proj-salesforce-link">Link to Salesforce (optional)</Label>
+        <Input
+          id="proj-salesforce-link"
+          value={salesforceLink}
+          onChange={(e) => onSalesforceLinkChange(e.target.value)}
+          placeholder="https://..."
+          data-testid="project-salesforce-link-input"
+        />
       </div>
 
       <div className="space-y-2">

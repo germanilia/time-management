@@ -4,7 +4,9 @@ import type { PhaseFormState } from "./types";
 
 interface ReviewStepProps {
   name: string;
+  customer: string;
   description: string;
+  salesforceLink: string;
   startDate: string;
   endDate: string;
   phases: PhaseFormState[];
@@ -17,7 +19,9 @@ interface ReviewStepProps {
  */
 export function ReviewStep({
   name,
+  customer,
   description,
+  salesforceLink,
   startDate,
   endDate,
   phases,
@@ -30,8 +34,16 @@ export function ReviewStep({
         <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
           <dt className="text-muted-foreground">Name</dt>
           <dd data-testid="review-project-name">{name}</dd>
+          <dt className="text-muted-foreground">Customer</dt>
+          <dd data-testid="review-project-customer">{customer}</dd>
           <dt className="text-muted-foreground">Description</dt>
           <dd data-testid="review-project-description">{description || "—"}</dd>
+          {salesforceLink && (
+            <>
+              <dt className="text-muted-foreground">Salesforce</dt>
+              <dd data-testid="review-project-salesforce-link">{salesforceLink}</dd>
+            </>
+          )}
           <dt className="text-muted-foreground">Start Date</dt>
           <dd data-testid="review-project-start-date">{startDate}</dd>
           <dt className="text-muted-foreground">End Date</dt>

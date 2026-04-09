@@ -94,7 +94,9 @@ export interface PhaseCreate {
 export interface Project {
   id: string;
   name: string;
+  customer: string;
   description: string | null;
+  salesforceLink: string | null;
   startDate: string;
   endDate: string | null;
   status: string;
@@ -112,7 +114,9 @@ export interface ProjectWithPhases extends Project {
 
 export interface ProjectCreate {
   name: string;
+  customer: string;
   description?: string;
+  salesforceLink?: string;
   startDate: string;
   endDate?: string;
   billingType?: BillingType;
@@ -123,7 +127,9 @@ export interface ProjectCreate {
 
 export interface ProjectUpdate {
   name?: string;
+  customer?: string;
   description?: string;
+  salesforceLink?: string;
   startDate?: string;
   endDate?: string;
   status?: string;

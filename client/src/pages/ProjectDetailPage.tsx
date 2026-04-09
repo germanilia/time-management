@@ -118,7 +118,9 @@ export function ProjectDetailPage() {
     if (!id) return;
     const updateData: ProjectUpdate = {
       name: data.name,
+      customer: data.customer,
       description: data.description,
+      salesforceLink: data.salesforceLink,
       startDate: data.startDate,
       endDate: data.endDate,
       billingType: data.billingType,
@@ -176,9 +178,14 @@ export function ProjectDetailPage() {
             <div className="flex size-10 items-center justify-center rounded-full bg-primary/10">
               <FolderKanban className="size-5 text-primary" aria-hidden="true" />
             </div>
-            <h1 className="text-2xl font-bold" data-testid="project-detail-title">
-              {project.name}
-            </h1>
+            <div>
+              <h1 className="text-2xl font-bold" data-testid="project-detail-title">
+                {project.name}
+              </h1>
+              <p className="text-sm text-muted-foreground" data-testid="project-detail-customer">
+                {project.customer}
+              </p>
+            </div>
           </div>
           {(canEdit || canDelete) && (
             <div className="flex gap-2">
@@ -232,6 +239,17 @@ export function ProjectDetailPage() {
             <span className="text-sm font-medium text-muted-foreground">
               Budget: ${formatCurrency(project.fixedPriceAmount)}
             </span>
+          )}
+          {project.salesforceLink && (
+            <a
+              href={project.salesforceLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary hover:underline"
+              data-testid="project-detail-salesforce-link"
+            >
+              Salesforce
+            </a>
           )}
         </div>
       </div>

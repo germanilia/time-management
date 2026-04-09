@@ -19,7 +19,9 @@ class ProjectDao:
         return ProjectResponse(
             id=row["id"],
             name=row["name"],
+            customer=row.get("customer", ""),
             description=row["description"],
+            salesforce_link=row.get("salesforce_link"),
             start_date=row["start_date"],
             end_date=row["end_date"],
             status=row["status"],
@@ -71,7 +73,9 @@ class ProjectDao:
             insert(projects).values(
                 id=project_id,
                 name=data.name,
+                customer=data.customer,
                 description=data.description,
+                salesforce_link=data.salesforce_link,
                 start_date=data.start_date,
                 end_date=data.end_date,
                 billing_type=data.billing_type,

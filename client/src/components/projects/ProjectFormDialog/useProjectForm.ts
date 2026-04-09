@@ -90,7 +90,9 @@ export function useProjectForm(
 ) {
   const [step, setStep] = useState<WizardStep>(WizardStep.PROJECT_INFO);
   const [name, setName] = useState(initialProject?.name ?? "");
+  const [customer, setCustomer] = useState(initialProject?.customer ?? "");
   const [description, setDescription] = useState(initialProject?.description ?? "");
+  const [salesforceLink, setSalesforceLink] = useState(initialProject?.salesforceLink ?? "");
   const [startDate, setStartDate] = useState(initialProject?.startDate ?? "");
   const [endDate, setEndDate] = useState(initialProject?.endDate ?? "");
   const [status, setStatus] = useState<string>(
@@ -116,7 +118,9 @@ export function useProjectForm(
   const resetForm = useCallback(() => {
     setStep(WizardStep.PROJECT_INFO);
     setName("");
+    setCustomer("");
     setDescription("");
+    setSalesforceLink("");
     setStartDate("");
     setEndDate("");
     setStatus(ProjectStatus.PLANNING);
@@ -130,7 +134,7 @@ export function useProjectForm(
 
   const canGoNext = useCallback((): boolean => {
     if (step === WizardStep.PROJECT_INFO) {
-      return name.trim() !== "" && startDate !== "";
+      return name.trim() !== "" && customer.trim() !== "" && startDate !== "";
     }
     if (step === WizardStep.PHASES) {
       return phases.every(
@@ -138,7 +142,7 @@ export function useProjectForm(
       );
     }
     return true;
-  }, [step, name, startDate, phases]);
+  }, [step, name, customer, startDate, phases]);
 
   const goNext = useCallback(() => {
     if (step < WizardStep.REVIEW) {
@@ -267,7 +271,9 @@ export function useProjectForm(
       await onSubmit(
         {
           name,
+          customer,
           description: description || undefined,
+          salesforceLink: salesforceLink || undefined,
           startDate,
           endDate: endDate || undefined,
           billingType,
@@ -283,14 +289,18 @@ export function useProjectForm(
     } finally {
       setSubmitting(false);
     }
-  }, [phases, name, description, startDate, endDate, billingType, fixedPriceAmount, fundingSourceId, onSubmit, resetForm]);
+  }, [phases, name, customer, description, salesforceLink, startDate, endDate, billingType, fixedPriceAmount, fundingSourceId, onSubmit, resetForm]);
 
   return {
     step,
     name,
     setName,
+    customer,
+    setCustomer,
     description,
     setDescription,
+    salesforceLink,
+    setSalesforceLink,
     startDate,
     setStartDate,
     endDate,

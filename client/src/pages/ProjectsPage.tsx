@@ -99,7 +99,9 @@ export function ProjectsPage() {
     if (!editingProject) return;
     const updateData: ProjectUpdate = {
       name: data.name,
+      customer: data.customer,
       description: data.description,
+      salesforceLink: data.salesforceLink,
       startDate: data.startDate,
       endDate: data.endDate,
       billingType: data.billingType,
@@ -176,6 +178,7 @@ export function ProjectsPage() {
           <TableHeader>
             <TableRow className="bg-muted/30">
               <TableHead className="font-semibold">Name</TableHead>
+              <TableHead className="font-semibold">Customer</TableHead>
               <TableHead className="font-semibold">Start</TableHead>
               <TableHead className="font-semibold">End</TableHead>
               <TableHead className="font-semibold">Phases</TableHead>
@@ -198,6 +201,9 @@ export function ProjectsPage() {
                   >
                     {proj.name}
                   </Link>
+                </TableCell>
+                <TableCell className="text-muted-foreground" data-testid={`project-customer-${proj.id}`}>
+                  {proj.customer}
                 </TableCell>
                 <TableCell className="tabular-nums text-muted-foreground">{proj.startDate}</TableCell>
                 <TableCell className="tabular-nums text-muted-foreground">{proj.endDate}</TableCell>

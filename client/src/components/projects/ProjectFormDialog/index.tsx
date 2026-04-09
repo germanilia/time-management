@@ -96,8 +96,12 @@ export function ProjectFormDialog({ open, onClose, onSubmit, project }: ProjectF
           <ProjectInfoStep
             name={form.name}
             onNameChange={form.setName}
+            customer={form.customer}
+            onCustomerChange={form.setCustomer}
             description={form.description}
             onDescriptionChange={form.setDescription}
+            salesforceLink={form.salesforceLink}
+            onSalesforceLinkChange={form.setSalesforceLink}
             startDate={form.startDate}
             onStartDateChange={form.setStartDate}
             endDate={form.endDate}
@@ -128,7 +132,9 @@ export function ProjectFormDialog({ open, onClose, onSubmit, project }: ProjectF
         {form.step === WizardStep.REVIEW && (
           <ReviewStep
             name={form.name}
+            customer={form.customer}
             description={form.description}
+            salesforceLink={form.salesforceLink}
             startDate={form.startDate}
             endDate={form.endDate}
             phases={form.phases}

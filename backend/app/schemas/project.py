@@ -68,7 +68,9 @@ class PhaseResponse(JsonModel):
 
 class ProjectCreate(JsonModel):
     name: str
+    customer: str
     description: str | None = None
+    salesforce_link: str | None = None
     start_date: date
     end_date: date | None = None
     billing_type: BillingType = BillingType.TIME_AND_MATERIALS
@@ -87,7 +89,9 @@ class ProjectCreate(JsonModel):
 
 class ProjectUpdate(JsonModel):
     name: str | None = None
+    customer: str | None = None
     description: str | None = None
+    salesforce_link: str | None = None
     start_date: date | None = None
     end_date: date | None = None
     status: ProjectStatus | None = None
@@ -100,7 +104,9 @@ class ProjectUpdate(JsonModel):
 class ProjectResponse(JsonModel):
     id: UUID
     name: str
+    customer: str
     description: str | None
+    salesforce_link: str | None
     start_date: date
     end_date: date | None
     status: ProjectStatus

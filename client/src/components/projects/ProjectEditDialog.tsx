@@ -125,8 +125,12 @@ export function ProjectEditDialog({ open, onClose, onSubmit, project, assignment
           <ProjectInfoStep
             name={form.name}
             onNameChange={form.setName}
+            customer={form.customer}
+            onCustomerChange={form.setCustomer}
             description={form.description}
             onDescriptionChange={form.setDescription}
+            salesforceLink={form.salesforceLink}
+            onSalesforceLinkChange={form.setSalesforceLink}
             startDate={form.startDate}
             onStartDateChange={form.setStartDate}
             endDate={form.endDate}
