@@ -38,7 +38,7 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, subtitle, href, icon: Icon, iconClassName }: MetricCardProps) {
   const content = (
-    <div className="flex items-center gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+    <div className="flex h-full items-center gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
       <div
         className={cn(
           "flex size-12 shrink-0 items-center justify-center rounded-xl",

@@ -19,6 +19,30 @@ SEED_USERS = [
     },
     {"email": "mikis@sela.co.il", "password": "Cowabunga1!", "name": "Miki S", "role": "admin"},
     {"email": "baruchf@sela.co.il", "password": "Cowabunga1!", "name": "Baruch F", "role": "admin"},
+    {
+        "email": "avielh@selacloud.com",
+        "password": "Cowabunga1!",
+        "name": "Aviel H",
+        "role": "admin",
+    },
+    {
+        "email": "zafrirk@selacloud.com",
+        "password": "Cowabunga1!",
+        "name": "Zafrir K",
+        "role": "admin",
+    },
+    {
+        "email": "talo@selacloud.com",
+        "password": "Cowabunga1!",
+        "name": "Tal O",
+        "role": "admin",
+    },
+    {
+        "email": "evgenyl@selacloud.com",
+        "password": "Cowabunga1!",
+        "name": "Evgeny L",
+        "role": "admin",
+    },
 ]
 
 SEED_ROLES = [

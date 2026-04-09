@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, FolderKanban } from "lucide-react";
+import { Plus, Pencil, Trash2, FolderKanban, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,47 @@ export function ProjectsPage() {
   const [error, setError] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<ProjectWithPhases | null>(null);
+  const [filterName, setFilterName] = useState("");
+  const [filterCustomer, setFilterCustomer] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterBilling, setFilterBilling] = useState("");
+  const [filterFunding, setFilterFunding] = useState("");
+
+  const hasActiveFilters =
+    filterName !== "" ||
+    filterCustomer !== "" ||
+    filterStatus !== "" ||
+    filterBilling !== "" ||
+    filterFunding !== "";
+
+  const clearFilters = useCallback(() => {
+    setFilterName("");
+    setFilterCustomer("");
+    setFilterStatus("");
+    setFilterBilling("");
+    setFilterFunding("");
+  }, []);
+
+  const fundingSourceOptions = useMemo(() => {
+    const names = new Set<string>();
+    for (const p of projects) {
+      if (p.fundingSourceName) names.add(p.fundingSourceName);
+    }
+    return Array.from(names).sort();
+  }, [projects]);
+
+  const filteredProjects = useMemo(() => {
+    const nameLower = filterName.toLowerCase();
+    const customerLower = filterCustomer.toLowerCase();
+    return projects.filter((p) => {
+      if (nameLower && !p.name.toLowerCase().includes(nameLower)) return false;
+      if (customerLower && !p.customer.toLowerCase().includes(customerLower)) return false;
+      if (filterStatus && p.status !== filterStatus) return false;
+      if (filterBilling && p.billingType !== filterBilling) return false;
+      if (filterFunding && (p.fundingSourceName ?? "") !== filterFunding) return false;
+      return true;
+    });
+  }, [projects, filterName, filterCustomer, filterStatus, filterBilling, filterFunding]);
 
   const load = useCallback(async () => {
     try {
@@ -173,6 +215,105 @@ export function ProjectsPage() {
           <p>No projects found.</p>
         </div>
       ) : (
+        <div className="space-y-3">
+        <div
+          className="flex flex-wrap items-end gap-3"
+          data-testid="project-filters"
+        >
+          <div className="space-y-1">
+            <label htmlFor="filter-name" className="text-xs font-medium text-muted-foreground">
+              Name
+            </label>
+            <Input
+              id="filter-name"
+              placeholder="Filter..."
+              value={filterName}
+              onChange={(e) => setFilterName(e.target.value)}
+              className="h-8 w-36"
+              data-testid="project-filter-name"
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="filter-customer" className="text-xs font-medium text-muted-foreground">
+              Customer
+            </label>
+            <Input
+              id="filter-customer"
+              placeholder="Filter..."
+              value={filterCustomer}
+              onChange={(e) => setFilterCustomer(e.target.value)}
+              className="h-8 w-36"
+              data-testid="project-filter-customer"
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="filter-status" className="text-xs font-medium text-muted-foreground">
+              Status
+            </label>
+            <select
+              id="filter-status"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="flex h-8 w-36 rounded-md border border-input bg-transparent px-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              data-testid="project-filter-status"
+            >
+              <option value="">All</option>
+              {statuses.map((s) => (
+                <option key={s.id} value={s.name}>
+                  {s.name.replace(/_/g, " ")}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="filter-billing" className="text-xs font-medium text-muted-foreground">
+              Billing
+            </label>
+            <select
+              id="filter-billing"
+              value={filterBilling}
+              onChange={(e) => setFilterBilling(e.target.value)}
+              className="flex h-8 w-36 rounded-md border border-input bg-transparent px-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              data-testid="project-filter-billing"
+            >
+              <option value="">All</option>
+              <option value="fixed_price">Fixed Price</option>
+              <option value="time_and_materials">T&M</option>
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="filter-funding" className="text-xs font-medium text-muted-foreground">
+              Funding
+            </label>
+            <select
+              id="filter-funding"
+              value={filterFunding}
+              onChange={(e) => setFilterFunding(e.target.value)}
+              className="flex h-8 w-36 rounded-md border border-input bg-transparent px-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              data-testid="project-filter-funding"
+            >
+              <option value="">All</option>
+              {fundingSourceOptions.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-8"
+              data-testid="project-filter-clear"
+            >
+              <X className="size-3.5" aria-hidden="true" />
+              Clear
+            </Button>
+          )}
+        </div>
+
         <div className="rounded-xl border bg-card shadow-sm">
         <Table data-testid="projects-table">
           <TableHeader>
@@ -191,7 +332,14 @@ export function ProjectsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {projects.map((proj) => (
+            {filteredProjects.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={11} className="py-8 text-center text-muted-foreground">
+                  No projects match the current filters.
+                </TableCell>
+              </TableRow>
+            ) : null}
+            {filteredProjects.map((proj) => (
               <TableRow key={proj.id} data-testid={`project-row-${proj.id}`} className="hover:bg-muted/40">
                 <TableCell>
                   <Link
@@ -300,6 +448,7 @@ export function ProjectsPage() {
             ))}
           </TableBody>
         </Table>
+        </div>
         </div>
       )}
 
