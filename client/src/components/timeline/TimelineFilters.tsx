@@ -11,6 +11,8 @@ interface TimelineFiltersProps {
   endDate: string;
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
+  showCompleted: boolean;
+  onShowCompletedChange: (show: boolean) => void;
 }
 
 /**
@@ -24,6 +26,8 @@ export function TimelineFilters({
   endDate,
   onStartDateChange,
   onEndDateChange,
+  showCompleted,
+  onShowCompletedChange,
 }: TimelineFiltersProps) {
   const toggleProject = (id: string) => {
     if (selectedProjectIds.includes(id)) {
@@ -66,6 +70,28 @@ export function TimelineFilters({
             className="w-40"
             data-testid="timeline-filter-end-date"
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="show-completed" className="cursor-pointer text-sm">
+            Show Completed
+          </Label>
+          <button
+            id="show-completed"
+            type="button"
+            role="switch"
+            aria-checked={showCompleted}
+            onClick={() => onShowCompletedChange(!showCompleted)}
+            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors ${
+              showCompleted ? "bg-primary" : "bg-muted"
+            }`}
+            data-testid="timeline-show-completed-toggle"
+          >
+            <span
+              className={`pointer-events-none block size-4 rounded-full bg-background shadow-sm ring-0 transition-transform ${
+                showCompleted ? "translate-x-4" : "translate-x-0"
+              }`}
+            />
+          </button>
         </div>
         {hasFilters && (
           <Button

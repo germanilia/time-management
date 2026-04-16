@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRole } from "@/hooks/useRole";
 import type { ProjectWithPhases, Phase, ProjectCreate, ProjectUpdate } from "@/types/project";
+import { ProjectStatus } from "@/types/project";
 import type { PendingAssignment } from "@/components/projects/ProjectFormDialog/useProjectForm";
 import type { ProjectFinancialInsight } from "@/types/analytics";
 import { cn } from "@/lib/utils";
@@ -285,6 +286,7 @@ export function TimelinePage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   const [editingProject, setEditingProject] = useState<ProjectWithPhases | null>(null);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -327,11 +329,14 @@ export function TimelinePage() {
 
   const filteredProjects = useMemo(() => {
     let result = allProjects;
+    if (!showCompleted) {
+      result = result.filter((p) => p.status !== ProjectStatus.COMPLETED);
+    }
     if (selectedProjectIds.length > 0) {
       result = result.filter((p) => selectedProjectIds.includes(p.id));
     }
     return result;
-  }, [allProjects, selectedProjectIds]);
+  }, [allProjects, selectedProjectIds, showCompleted]);
 
   const handlePhaseClick = (phase: Phase, projectId: string) => {
     setSelectedPhase(phase);
@@ -398,6 +403,8 @@ export function TimelinePage() {
         endDate={rangeEnd}
         onStartDateChange={setRangeStart}
         onEndDateChange={setRangeEnd}
+        showCompleted={showCompleted}
+        onShowCompletedChange={setShowCompleted}
       />
 
       {/* Each project gets its own card with dedicated timeline */}
