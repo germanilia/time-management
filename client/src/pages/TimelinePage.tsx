@@ -330,7 +330,11 @@ export function TimelinePage() {
   const filteredProjects = useMemo(() => {
     let result = allProjects;
     if (!showCompleted) {
-      result = result.filter((p) => p.status !== ProjectStatus.COMPLETED);
+      result = result.filter((p) => {
+        if (p.status === ProjectStatus.COMPLETED) return false;
+        if (p.endDate && computeProgress(p.startDate, p.endDate) >= 100) return false;
+        return true;
+      });
     }
     if (selectedProjectIds.length > 0) {
       result = result.filter((p) => selectedProjectIds.includes(p.id));
