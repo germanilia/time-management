@@ -34,6 +34,10 @@ const ALLOCATION_TYPE_OPTIONS = [
   { value: "hours", label: "Hours" },
 ];
 
+function isActiveOnDate(assignment: Assignment, date: string): boolean {
+  return assignment.startDate <= date && assignment.endDate >= date;
+}
+
 interface EmployeeGroup {
   employeeId: string;
   employee: Employee | undefined;
@@ -125,9 +129,13 @@ export function AssignmentsPage() {
     return options;
   }, [projects]);
 
+  const today = new Date().toISOString().slice(0, 10);
+  const referenceDate = filterStartDate || today;
+
   const employeeGroups = useMemo((): EmployeeGroup[] => {
     const groupMap = new Map<string, Assignment[]>();
     for (const assign of assignments) {
+      if (assign.endDate < today) continue;
       const existing = groupMap.get(assign.employeeId) ?? [];
       existing.push(assign);
       groupMap.set(assign.employeeId, existing);
@@ -138,6 +146,7 @@ export function AssignmentsPage() {
       let totalPercentage = 0;
       let totalHours = 0;
       for (const a of empAssignments) {
+        if (!isActiveOnDate(a, referenceDate)) continue;
         if (a.allocationType === "percentage") {
           totalPercentage += a.allocationPercentage ?? 0;
         } else {
@@ -146,7 +155,7 @@ export function AssignmentsPage() {
       }
       return { employeeId, employee, assignments: empAssignments, totalPercentage, totalHours };
     });
-  }, [assignments, employeeMap]);
+  }, [assignments, employeeMap, referenceDate, today]);
 
   const toggleExpand = (employeeId: string) => {
     setExpandedEmployees((prev) => {
